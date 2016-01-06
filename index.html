@@ -5,10 +5,14 @@
     <title>The Scala.js Tutorial</title>
   </head>
   <body>
-    <!-- Include Scala.js compiled code -->
+	<script type="text/javascript">
+      var mydata = {
+        msg: "Some text generated dynamically by the server"
+      };
+	</script>
+    <script type="text/javascript" src="./js/jquery-2.1.3.min.js"></script>
     <script type="text/javascript" src="./target/scala-2.11/scala-js-tutorial-fastopt.js"></script>
-    <!-- Run tutorial.webapp.TutorialApp -->
-	<button id="click-me-button" type="button" onclick="tutorial.webapp.TutorialApp().addClickedMessage()">Click me!</button>
+	<button id="click-me-button" type="button">Click me!</button>
     <script type="text/javascript">
       tutorial.webapp.TutorialApp().main();
     </script>
