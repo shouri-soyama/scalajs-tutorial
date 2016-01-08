@@ -7,6 +7,7 @@ import dom.ext.Ajax
 import scala.scalajs.js
 import scala.scalajs.js.annotation.JSExport
 import scala.scalajs.js.JSApp
+import scala.language.reflectiveCalls
 
 object TutorialApp extends JSApp {
   def main(): Unit = {
@@ -24,13 +25,17 @@ object TutorialApp extends JSApp {
     parNode.appendChild(textNode)
     targetNode.appendChild(parNode)
   }
+  @js.native
+  trait MyData extends js.Object {
+    val msg: String = js.native
+  }
   def addClickedMessage(e: js.Any): Unit = {
     js.Dynamic.global.console.dir(e)
-    val mydata = js.Dynamic.global.mydata
+    val mydata = js.Dynamic.global.mydata.asInstanceOf[MyData]
     js.Dynamic.global.console.log("aaaaaaa")
-    appendPar(document.body, mydata.msg.asInstanceOf[String])
-    import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
-    val url = "http://api.openweathermap.org/data/2.5/weather?q=Singapore"
-    Ajax.get(url).onSuccess{ case xhr => appendPar(document.body, xhr.responseText) }
+    appendPar(document.body, mydata.msg)
+//    import scala.scalajs.concurrent.JSExecutionContext.Implicits.runNow
+//    val url = "http://api.openweathermap.org/data/2.5/weather?q=Singapore"
+//    Ajax.get(url).onSuccess{ case xhr => appendPar(document.body, xhr.responseText) }
   }
 }

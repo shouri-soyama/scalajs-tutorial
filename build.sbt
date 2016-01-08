@@ -1,12 +1,23 @@
+import org.scalajs.sbtplugin.ScalaJSPlugin._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+
 enablePlugins(ScalaJSPlugin)
 
-scalaJSStage in Global := FastOptStage
+val scalajsOutputDir = Def.settingKey[File]("directory for javascript files output by scalajs")
 
-name := "Scala.js Tutorial"
+lazy val js2jvmSettings = Seq(fastOptJS, fullOptJS, packageJSDependencies) map { packageJSKey =>
+  crossTarget in(Compile, packageJSKey) := scalajsOutputDir.value
+}
 
-scalaVersion := "2.11.7"
-
-libraryDependencies ++= Seq(
-  "org.scala-js" %%% "scalajs-dom" % "0.8.0",
-  "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
+lazy val p1 = project.in(file(".")).settings(js2jvmSettings: _*).settings(
+  scalaVersion := "2.11.7",
+  name := "Scala.js Tutorial",
+  scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
+  ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) },
+  scalaJSStage in Global := FastOptStage,
+  libraryDependencies ++= Seq(
+    "org.scala-js" %%% "scalajs-dom" % "0.8.0",
+    "be.doeraene" %%% "scalajs-jquery" % "0.8.0"
+  ),
+  scalajsOutputDir := file("./js") / "web"
 )
